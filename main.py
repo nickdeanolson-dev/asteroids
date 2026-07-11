@@ -2,7 +2,7 @@ import pygame
 from constants import *
 from logger import log_state
 from player import *
-
+from asteroid import *
 
 
 
@@ -17,10 +17,13 @@ def main():
     dt = 0.0
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     # Player is the name of the class, not an instance of it
     # This must be done before any Player objects are created
     Player.containers = (updatable, drawable)
-
+    AsteroidField.containers = (updatable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    asteroidfield = AsteroidField()
 
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     while True:
