@@ -7,6 +7,7 @@ class Player(CircleShape):
     def __init__(self,x,y):
         super().__init__(x,y, PLAYER_RADIUS)
         self.rotation = 0
+        #self.driftpercent = 0.0
 
 
     # in the Player class
@@ -37,10 +38,18 @@ class Player(CircleShape):
             self.rotate(dt)
         if keys[pygame.K_w]:
             self.move(dt)
+            self.driftpercent = 1.0
         if keys[pygame.K_s]:
             self.move(dt*-1)
+            self.driftpercent = 1.0
         if keys[pygame.K_SPACE]:
             self.shoot()
+        print (self.driftpercent)
+        #if self.driftpercent > 0.0 and not keys[pygame.K_s] and not keys[pygame.K_w]:
+            #self.driftpercent -= PLAYER_DRIFT_DECAY
+            #if self.driftpercent < 0.0:
+                #self.driftpercent = 0.0
+            #self.move(dt*self.driftpercent)
 
 
     def move(self, dt):
