@@ -9,6 +9,7 @@ class Player(CircleShape):
         self.rotation = 0
         #self.driftpercent = 0.0
         self.shot_cooldown = 0.0
+        self.speed = 0.0
 
 
     # in the Player class
@@ -38,11 +39,17 @@ class Player(CircleShape):
         if keys[pygame.K_d]:
             self.rotate(dt)
         if keys[pygame.K_w]:
-            self.move(dt)
+            if self.speed <= PLAYER_SPEED:
+                self.speed += PLAYER_ACCELLERATION
+            #self.move(dt)
             self.driftpercent = 1.0
         if keys[pygame.K_s]:
-            self.move(dt*-1)
+            if self.speed > 0:
+                self.speed -= PLAYER_ACCELLERATION
+            #self.move(dt*-1)
             self.driftpercent = 1.0
+        #if not keys[pygame.K_s] and not keys[pygame.K_w]:
+            #self.speed = 0.0
         if keys[pygame.K_SPACE]:
             if self.shot_cooldown <= 0.0:
                 self.shoot()
@@ -51,7 +58,7 @@ class Player(CircleShape):
             self.shot_cooldown -= dt
         else:
             self.shot_cooldown = 0.0
-        
+        self.move(dt)
         #print (self.driftpercent)
         #if self.driftpercent > 0.0 and not keys[pygame.K_s] and not keys[pygame.K_w]:
             #self.driftpercent -= PLAYER_DRIFT_DECAY
@@ -63,5 +70,5 @@ class Player(CircleShape):
     def move(self, dt):
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
-        rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
+        rotated_with_speed_vector = rotated_vector * self.speed * dt
         self.position += rotated_with_speed_vector
