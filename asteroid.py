@@ -1,4 +1,11 @@
 from circleshape import *
+from logger import log_event
+
+import random
+from collections.abc import Callable
+
+import pygame
+from constants import *
 
 class Asteroid(CircleShape):
     def __init__(self,x,y,radius):
@@ -11,12 +18,19 @@ class Asteroid(CircleShape):
     def update(self, dt):
         self.position += self.velocity*dt
 
-import random
-from collections.abc import Callable
+    def split(self):
+        self.kill()
+        if self.radius <= ASTEROID_MIN_RADIUS:
+            return
+        log_event("asteroid_split")
+        split_angle_a = random.uniform(20, 50)
+        split_angle_b = random.uniform(20, 50)
+        split_radius = self.radius - ASTEROID_MIN_RADIUS
+        asteroid_split_a = Asteroid(self.position[0], self.position[1], split_radius)
+        asteroid_split_a.velocity = self.velocity.rotate(split_angle_a) * 1.2
+        asteroid_split_b = Asteroid(self.position[0], self.position[1], split_radius)
+        asteroid_split_b.velocity = self.velocity.rotate(-split_angle_b) * 1.2
 
-import pygame
-from asteroid import Asteroid
-from constants import *
 
 Edge = tuple[pygame.Vector2, Callable[[float], pygame.Vector2]]
 
