@@ -61,8 +61,13 @@ def main():
                 print("Game over!")
                 sys.exit()
 
+        for asteroid in sorted(
+            asteroids, key=lambda asteroid: asteroid.radius, reverse=True
+        ):
+            asteroid.draw(screen)
         for item in drawable:
-            item.draw(screen)
+            if not isinstance(item, Asteroid):
+                item.draw(screen)
 
         score_surface = font.render(f"Score: {score}", True, "white")
         score_position = (

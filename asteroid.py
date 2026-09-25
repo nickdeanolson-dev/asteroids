@@ -53,7 +53,13 @@ class Asteroid(CircleShape):
 
     def draw(self, screen):
         points = [self.position + vertex for vertex in self.vertices]
-        pygame.draw.polygon(screen, "white", points, LINE_WIDTH)
+        if self.radius >= ASTEROID_MAX_RADIUS:
+            color = (128, 128, 128)
+        elif self.radius > ASTEROID_MIN_RADIUS:
+            color = (112, 128, 152)
+        else:
+            color = (152, 112, 112)
+        pygame.draw.polygon(screen, color, points)
 
     def update(self, dt):
         self.position += self.velocity*dt
