@@ -10,10 +10,50 @@ from constants import *
 class Asteroid(CircleShape):
     def __init__(self,x,y,radius):
         super().__init__(x,y,radius)
+        vertex_count = 22
+        min_radius_factor = 0.7
+        max_radius_factor = 1.05
+        max_adjacent_change = 0.15
+        raw_radius_factors = [
+            random.uniform(min_radius_factor, max_radius_factor)
+            for _ in range(vertex_count)
+        ]
+        min_index = random.randrange(vertex_count)
+        max_candidates = [
+            index
+            for index in range(vertex_count)
+            if min(abs(index - min_index), vertex_count - abs(index - min_index)) >= 4
+        ]
+        max_index = random.choice(max_candidates)
+        raw_radius_factors[min_index] = min_radius_factor
+        raw_radius_factors[max_index] = max_radius_factor
+        for distance, lower_factor in ((1, 0.9), (2, 0.75)):
+            for offset in (-distance, distance):
+                index = (max_index + offset) % vertex_count
+                raw_radius_factors[index] = random.uniform(
+                    lower_factor, max_radius_factor
+                )
+        radius_factors = [
+            min(
+                raw_radius_factors[source_index]
+                + max_adjacent_change
+                * min(
+                    abs(index - source_index),
+                    vertex_count - abs(index - source_index),
+                )
+                for source_index in range(vertex_count)
+            )
+            for index in range(vertex_count)
+        ]
+        self.vertices = [
+            pygame.Vector2(radius * factor, 0).rotate(index * 360 / len(radius_factors))
+            for index, factor in enumerate(radius_factors)
+        ]
 
 
     def draw(self, screen):
-        pygame.draw.circle(screen, "white", self.position, self.radius, LINE_WIDTH)
+        points = [self.position + vertex for vertex in self.vertices]
+        pygame.draw.polygon(screen, "white", points, LINE_WIDTH)
 
     def update(self, dt):
         self.position += self.velocity*dt
