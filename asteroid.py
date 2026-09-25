@@ -50,11 +50,11 @@ class Asteroid(CircleShape):
             for index, factor in enumerate(radius_factors)
         ]
         if radius >= ASTEROID_MAX_RADIUS:
-            max_rotation_speed = 5
-        elif radius > ASTEROID_MIN_RADIUS:
             max_rotation_speed = 10
-        else:
+        elif radius > ASTEROID_MIN_RADIUS:
             max_rotation_speed = 20
+        else:
+            max_rotation_speed = 40
         self.rotation_speed = random.uniform(-max_rotation_speed, max_rotation_speed)
 
 
