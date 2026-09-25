@@ -49,6 +49,13 @@ class Asteroid(CircleShape):
             pygame.Vector2(radius * factor, 0).rotate(index * 360 / len(radius_factors))
             for index, factor in enumerate(radius_factors)
         ]
+        if radius >= ASTEROID_MAX_RADIUS:
+            max_rotation_speed = 5
+        elif radius > ASTEROID_MIN_RADIUS:
+            max_rotation_speed = 10
+        else:
+            max_rotation_speed = 20
+        self.rotation_speed = random.uniform(-max_rotation_speed, max_rotation_speed)
 
 
     def draw(self, screen):
@@ -66,6 +73,9 @@ class Asteroid(CircleShape):
         pygame.draw.polygon(screen, "black", points, 1)
 
     def update(self, dt):
+        self.vertices = [
+            vertex.rotate(self.rotation_speed * dt) for vertex in self.vertices
+        ]
         self.position += self.velocity*dt
         self.wrap_position()
 
