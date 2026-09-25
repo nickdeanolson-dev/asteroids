@@ -6,6 +6,7 @@ from player import *
 from asteroid import *
 from logger import log_event
 from shot import *
+from starfield import Starfield
 
 def main():
     print("Hello from asteroids!")
@@ -14,6 +15,7 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    starfield = Starfield()
     font = pygame.font.Font(None, 36)
     clock = pygame.time.Clock()
     dt = 0.0
@@ -37,6 +39,8 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
+        starfield.update(dt)
+        starfield.draw(screen)
         
         updatable.update(dt)
 
