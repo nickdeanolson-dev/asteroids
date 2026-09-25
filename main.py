@@ -61,10 +61,12 @@ def main():
                 print("Game over!")
                 sys.exit()
 
-        for asteroid in sorted(
+        sorted_asteroids = sorted(
             asteroids, key=lambda asteroid: asteroid.radius, reverse=True
-        ):
+        )
+        for asteroid in sorted_asteroids:
             asteroid.draw(screen)
+            asteroid.draw_outline(screen)
         for item in drawable:
             if not isinstance(item, Asteroid):
                 item.draw(screen)

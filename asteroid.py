@@ -61,6 +61,10 @@ class Asteroid(CircleShape):
             color = (152, 112, 112)
         pygame.draw.polygon(screen, color, points)
 
+    def draw_outline(self, screen):
+        points = [self.position + vertex for vertex in self.vertices]
+        pygame.draw.polygon(screen, "black", points, 1)
+
     def update(self, dt):
         self.position += self.velocity*dt
         self.wrap_position()
