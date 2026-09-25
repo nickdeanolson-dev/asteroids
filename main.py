@@ -14,8 +14,10 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    font = pygame.font.Font(None, 36)
     clock = pygame.time.Clock()
     dt = 0.0
+    score = 0
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
@@ -42,6 +44,12 @@ def main():
             for shot in shots:
                 if ast.collides_with(shot):
                     log_event("asteroid_shot")
+                    if ast.radius == ASTEROID_MAX_RADIUS:
+                        score += 50
+                    elif ast.radius == ASTEROID_MAX_RADIUS - ASTEROID_MIN_RADIUS:
+                        score += 100
+                    else:
+                        score += 200
                     ast.split()
                     shot.kill()
             if ast.collides_with(player):
@@ -51,6 +59,13 @@ def main():
 
         for item in drawable:
             item.draw(screen)
+
+        score_surface = font.render(f"Score: {score}", True, "white")
+        score_position = (
+            SCREEN_WIDTH - score_surface.get_width() - 20,
+            20,
+        )
+        screen.blit(score_surface, score_position)
         
         dt = clock.tick(60)/1000
         pygame.display.flip()
