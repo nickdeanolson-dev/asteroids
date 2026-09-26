@@ -10,10 +10,10 @@ from constants import *
 class Asteroid(CircleShape):
     def __init__(self,x,y,radius):
         super().__init__(x,y,radius)
-        vertex_count = 22
-        min_radius_factor = 0.7
-        max_radius_factor = 1.05
-        max_adjacent_change = 0.15
+        vertex_count = ASTEROID_VERTEX_COUNT
+        min_radius_factor = ASTEROID_MIN_RADIUS_FACTOR
+        max_radius_factor = ASTEROID_MAX_RADIUS_FACTOR
+        max_adjacent_change = ASTEROID_MAX_ADJACENT_RADIUS_CHANGE
         raw_radius_factors = [
             random.uniform(min_radius_factor, max_radius_factor)
             for _ in range(vertex_count)
@@ -22,12 +22,16 @@ class Asteroid(CircleShape):
         max_candidates = [
             index
             for index in range(vertex_count)
-            if min(abs(index - min_index), vertex_count - abs(index - min_index)) >= 4
+            if min(abs(index - min_index), vertex_count - abs(index - min_index))
+            >= ASTEROID_MIN_PEAK_SEPARATION
         ]
         max_index = random.choice(max_candidates)
         raw_radius_factors[min_index] = min_radius_factor
         raw_radius_factors[max_index] = max_radius_factor
-        for distance, lower_factor in ((1, 0.9), (2, 0.75)):
+        for distance, lower_factor in (
+            (1, ASTEROID_PEAK_ADJACENT_RADIUS_FACTOR),
+            (2, ASTEROID_PEAK_NEXT_RADIUS_FACTOR),
+        ):
             for offset in (-distance, distance):
                 index = (max_index + offset) % vertex_count
                 raw_radius_factors[index] = random.uniform(
@@ -50,22 +54,22 @@ class Asteroid(CircleShape):
             for index, factor in enumerate(radius_factors)
         ]
         if radius >= ASTEROID_MAX_RADIUS:
-            max_rotation_speed = 10
+            max_rotation_speed = ASTEROID_ROTATION_SPEEDS[0]
         elif radius > ASTEROID_MIN_RADIUS:
-            max_rotation_speed = 20
+            max_rotation_speed = ASTEROID_ROTATION_SPEEDS[1]
         else:
-            max_rotation_speed = 40
+            max_rotation_speed = ASTEROID_ROTATION_SPEEDS[2]
         self.rotation_speed = random.uniform(-max_rotation_speed, max_rotation_speed)
 
 
     def draw(self, screen):
         points = [self.position + vertex for vertex in self.vertices]
         if self.radius >= ASTEROID_MAX_RADIUS:
-            color = (128, 128, 128)
+            color = ASTEROID_COLORS[0]
         elif self.radius > ASTEROID_MIN_RADIUS:
-            color = (112, 128, 152)
+            color = ASTEROID_COLORS[1]
         else:
-            color = (152, 112, 112)
+            color = ASTEROID_COLORS[2]
         pygame.draw.polygon(screen, color, points)
 
     def draw_outline(self, screen):

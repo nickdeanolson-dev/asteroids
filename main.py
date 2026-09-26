@@ -88,11 +88,11 @@ def run_game(screen, starfield, clock, font):
                 if ast.collides_with(shot):
                     log_event("asteroid_shot")
                     if ast.radius == ASTEROID_MAX_RADIUS:
-                        score += 50
+                        score += ASTEROID_SCORES[0]
                     elif ast.radius == ASTEROID_MAX_RADIUS - ASTEROID_MIN_RADIUS:
-                        score += 100
+                        score += ASTEROID_SCORES[1]
                     else:
-                        score += 200
+                        score += ASTEROID_SCORES[2]
                     ast.split()
                     shot.kill()
             if ast.collides_with(player):
