@@ -2,11 +2,17 @@ from constants import *
 from circleshape import *
 from shot import *
 
+import os
+
 
 class Player(CircleShape):
     def __init__(self,x,y):
         super().__init__(x,y, PLAYER_RADIUS)
-        self.rotation = 0
+        self.rotation = 180
+        image_path = os.path.join(os.path.dirname(__file__), "assets", "usstriangle.png")
+        image = pygame.image.load(image_path).convert_alpha()
+        image_size = (int(self.radius * 2 / 1.5), int(self.radius * 2))
+        self.image = pygame.transform.smoothscale(image, image_size)
         #self.driftpercent = 0.0
         self.shot_cooldown = 0.0
 
@@ -21,7 +27,9 @@ class Player(CircleShape):
         return [a, b, c]
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), LINE_WIDTH)
+        rotated_image = pygame.transform.rotate(self.image, 180 - self.rotation)
+        image_rect = rotated_image.get_rect(center=self.position)
+        screen.blit(rotated_image, image_rect)
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
