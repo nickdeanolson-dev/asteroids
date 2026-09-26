@@ -61,3 +61,4 @@ class Player(CircleShape):
 
     def move(self, dt):
         self.position += self.velocity * dt
+        self.wrap_position()
